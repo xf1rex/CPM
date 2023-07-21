@@ -1,4 +1,4 @@
-clear workspace;
+clear;
 %sampleTime nelle slide T
 sampleTime = 1;
 %K nelle slide, numero di simboli generati
@@ -12,6 +12,7 @@ data = [1,-1,1,1,-1];
 %variabile di input per la CPM
 simin = timeseries(data,time);
 
+
 %fase iniziale
 start_phase = 0;
 %energia in caso di assenza di rumore
@@ -19,45 +20,37 @@ E = 1;
 %Ampiezza delle forme d'onda
 A = sqrt(2*E/sampleTime);
 
-%frequenze ausiliarie (scostamento dalla frequenza di centrobanda, nel nostro
-%caso siamo in banda base)
-f_1 = 1/(4*sampleTime);
-f_2 = - 1/(4*sampleTime);
+%frequenza ausiliaria per la generazione delle sinusoidi/cosinusoidi della
+%s(t)
+f = 1/(4*sampleTime);
+
+f_0 = 2000000;
+f_1 = f_0 + f;
+f_2 = f_0 - f;
+
+% Il blocco su simulink, si aspetta in input la frequeza ed a partire da
+% questa genera la forma d'onda. Il blocco prende in inpunt una var
+% denominata u e la moltiplica per 2pi.
 
 %variabile di input per la funzione di generazione di sin e cosin,
 %all'interno dell'argomento rappresenta la variabile k
-num_sequence = [0,1,2,3,0];
-%inizializziamo il vettore delle frequenze con la frequenza 1/(4T)
-freq = [f_1,f_1,f_1,f_1,f_1];
-%inizializziamo il vettore delle frequenze con la frequenza -1/(4T)
-freq_2 = [f_2,f_2,f_2,f_2,f_2];
+k = [0,1,2,3,4];
 
-% calcoliamo la sequenza di frequenze effettive.
-% Il blocco su simulink, si aspetta in input la frequeza ed a partire da
-% questa genera la forma d'onda. Il blocco prende in inpunt una var
-% denominata u e la moltiplica per 2pi. A tal fine freq_r rappresenta la
-% sequenza degli u da fornire in input al blocco.
-freq_r = [freq - (1/4).*num_sequence] + start_phase
-k = timeseries(num_sequence,time)
-%variabilie di input per il blocco di generazione della forma d'onda.
-freq_series = timeseries(freq_r,time)
+%Array con i vari k moltiplicati per la pi/2
+pk = (pi/2).*k;
 
-% calcoliamo la sequenza di frequenze effettive.
-% Il blocco su simulink, si aspetta in input la frequeza ed a partire da
-% questa genera la forma d'onda. Il blocco prende in inpunt una var
-% denominata u e la moltiplica per 2pi. A tal fine freq_r rappresenta la
-% sequenza degli u da fornire in input al blocco.
-freq_2r = [freq_2 + (1/4).*num_sequence] + start_phase
+% calcoliamo la sequenza delle cos((pi/2)*k). Valido sia per il caso
+% j=1,che j=2.
+val_cos = cos(pk);
 
-%variabilie di input per il blocco di generazione della forma d'onda.
-freq_series_2 = timeseries(freq_2r,time)
+% calcoliamo la sequenza delle sin((pi/2)*k). Valido sia per il caso j=1.
+val_sin_1 = -sin(pk);
 
-%fase 
-p = start_phase;
-i=1;
-p_j = [0,0,0,0,0];
-while i<=numSteps
-    p = p - pi/2;
-    p_j(1,i) = p;
-    i=i+1;
-end
+% calcoliamo la sequenza delle sin((pi/2)*k). Valido sia per il caso j=2.
+val_sin_2 = sin(pk);
+
+%Generazione 3 dei temeseries relativi ai valori assunti dalle funzioni cos
+%e sin
+val_cos_temp = timeseries(val_cos,time);
+val_sin1_temp = timeseries(val_sin_1,time);
+val_sin2_temp = timeseries(val_sin_2,time);
