@@ -12,7 +12,8 @@ data = [1,-1,1,1,-1];
 %variabile di input per la CPM
 simin = timeseries(data,time);
 
-
+%
+sample_n = 5000
 %fase iniziale
 start_phase = 0;
 %energia in caso di assenza di rumore
@@ -22,9 +23,11 @@ A = sqrt(2*E/sampleTime);
 
 %frequenza ausiliaria per la generazione delle sinusoidi/cosinusoidi della
 %s(t)
-f = 1/(4*sampleTime);
+f = 2*(pi*(1/(4*sampleTime)));
 
-f_1 = 
+f_0 = 2*(pi*(2000));
+f_1 = f_0 + f;
+f_2 = f_0 - f;
 
 % Il blocco su simulink, si aspetta in input la frequeza ed a partire da
 % questa genera la forma d'onda. Il blocco prende in inpunt una var
@@ -32,7 +35,7 @@ f_1 =
 
 %variabile di input per la funzione di generazione di sin e cosin,
 %all'interno dell'argomento rappresenta la variabile k
-k = [0,1,2,3,0];
+k = [0,1,2,3,4];
 
 %Array con i vari k moltiplicati per la pi/2
 pk = (pi/2).*k;
@@ -41,11 +44,14 @@ pk = (pi/2).*k;
 % j=1,che j=2.
 val_cos = cos(pk);
 
-% calcoliamo la sequenza delle sin((pi/2)*k). Valido sia per il caso j=1 che j=2.
-val_sin = sin(pk);
+% calcoliamo la sequenza delle sin((pi/2)*k). Valido sia per il caso j=1.
+val_sin_1 = -sin(pk);
 
+% calcoliamo la sequenza delle sin((pi/2)*k). Valido sia per il caso j=2.
+val_sin_2 = sin(pk);
 
-%Generazione 2 dei temeseries relativi ai valori assunti dalle funzioni cos
+%Generazione 3 dei temeseries relativi ai valori assunti dalle funzioni cos
 %e sin
 val_cos_temp = timeseries(val_cos,time);
-val_sin_temp = timeseries(val_sin,time);
+val_sin1_temp = timeseries(val_sin_1,time);
+val_sin2_temp = timeseries(val_sin_2,time);

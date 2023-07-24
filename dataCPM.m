@@ -12,7 +12,8 @@ data = [1,-1,1,1,-1];
 %variabile di input per la CPM
 simin = timeseries(data,time);
 
-
+%numero di campioni per generazione di forme d'onda e segnale modulato CPM
+sample_n = 5000;
 %fase iniziale
 start_phase = 0;
 %energia in caso di assenza di rumore
@@ -22,9 +23,9 @@ A = sqrt(2*E/sampleTime);
 
 %frequenza ausiliaria per la generazione delle sinusoidi/cosinusoidi della
 %s(t)
-f = 1/(4*sampleTime);
+f = (1/(4*sampleTime));
 
-f_0 = 2000000;
+f_0 = 2000;
 f_1 = f_0 + f;
 f_2 = f_0 - f;
 
