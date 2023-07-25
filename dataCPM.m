@@ -13,7 +13,7 @@ data = [1,-1,1,1,-1];
 simin = timeseries(data,time);
 
 %numero di campioni per generazione di forme d'onda e segnale modulato CPM
-sample_n = 500;
+sample_n = 32;
 %fase iniziale
 start_phase = 0;
 %energia in caso di assenza di rumore
