@@ -19,7 +19,8 @@ start_phase = 0;
 %energia in caso di assenza di rumore
 E = 1;
 %Ampiezza delle forme d'onda
-A = sqrt(2*E/sampleTime);
+A = sqrt(E/2*sampleTime);
+A_rt = sqrt(2*E/sampleTime);
 
 %frequenza ausiliaria per la generazione delle sinusoidi/cosinusoidi della
 %s(t)
